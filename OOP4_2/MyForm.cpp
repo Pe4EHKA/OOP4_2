@@ -11,7 +11,7 @@ using namespace System::Drawing;
 int main(array<String^>^ arg) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-	OOP42::MyForm form; // OOP41 имя проекта
+	OOP42::MyForm form; // OOP42 имя проекта
 	Application::Run(% form);
 	return 0;
 }
