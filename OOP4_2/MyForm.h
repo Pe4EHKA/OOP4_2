@@ -157,6 +157,7 @@ namespace OOP42 {
 			this->textBoxA->Size = System::Drawing::Size(200, 31);
 			this->textBoxA->TabIndex = 5;
 			this->textBoxA->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBoxA_KeyDown);
+			this->textBoxA->Leave += gcnew System::EventHandler(this, &MyForm::textBoxA_Leave);
 			// 
 			// textBoxB
 			// 
@@ -164,6 +165,8 @@ namespace OOP42 {
 			this->textBoxB->Name = L"textBoxB";
 			this->textBoxB->Size = System::Drawing::Size(200, 31);
 			this->textBoxB->TabIndex = 6;
+			this->textBoxB->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBoxB_KeyDown);
+			this->textBoxB->Leave += gcnew System::EventHandler(this, &MyForm::textBoxB_Leave);
 			// 
 			// textBoxC
 			// 
@@ -171,6 +174,8 @@ namespace OOP42 {
 			this->textBoxC->Name = L"textBoxC";
 			this->textBoxC->Size = System::Drawing::Size(200, 31);
 			this->textBoxC->TabIndex = 7;
+			this->textBoxC->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBoxC_KeyDown);
+			this->textBoxC->Leave += gcnew System::EventHandler(this, &MyForm::textBoxC_Leave);
 			// 
 			// numericUpDownA
 			// 
@@ -178,6 +183,9 @@ namespace OOP42 {
 			this->numericUpDownA->Name = L"numericUpDownA";
 			this->numericUpDownA->Size = System::Drawing::Size(200, 31);
 			this->numericUpDownA->TabIndex = 8;
+			this->numericUpDownA->ValueChanged += gcnew System::EventHandler(this, &MyForm::numericUpDownA_ValueChanged);
+			this->numericUpDownA->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::numericUpDownA_KeyDown);
+			this->numericUpDownA->Leave += gcnew System::EventHandler(this, &MyForm::numericUpDownA_Leave);
 			// 
 			// numericUpDownB
 			// 
@@ -185,6 +193,9 @@ namespace OOP42 {
 			this->numericUpDownB->Name = L"numericUpDownB";
 			this->numericUpDownB->Size = System::Drawing::Size(200, 31);
 			this->numericUpDownB->TabIndex = 9;
+			this->numericUpDownB->ValueChanged += gcnew System::EventHandler(this, &MyForm::numericUpDownB_ValueChanged);
+			this->numericUpDownB->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::numericUpDownB_KeyDown);
+			this->numericUpDownB->Leave += gcnew System::EventHandler(this, &MyForm::numericUpDownB_Leave);
 			// 
 			// numericUpDownC
 			// 
@@ -192,6 +203,9 @@ namespace OOP42 {
 			this->numericUpDownC->Name = L"numericUpDownC";
 			this->numericUpDownC->Size = System::Drawing::Size(200, 31);
 			this->numericUpDownC->TabIndex = 10;
+			this->numericUpDownC->ValueChanged += gcnew System::EventHandler(this, &MyForm::numericUpDownC_ValueChanged);
+			this->numericUpDownC->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::numericUpDownC_KeyDown);
+			this->numericUpDownC->Leave += gcnew System::EventHandler(this, &MyForm::numericUpDownC_Leave);
 			// 
 			// trackBarA
 			// 
@@ -200,6 +214,7 @@ namespace OOP42 {
 			this->trackBarA->Name = L"trackBarA";
 			this->trackBarA->Size = System::Drawing::Size(200, 90);
 			this->trackBarA->TabIndex = 11;
+			this->trackBarA->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarA_Scroll);
 			// 
 			// trackBarB
 			// 
@@ -208,6 +223,7 @@ namespace OOP42 {
 			this->trackBarB->Name = L"trackBarB";
 			this->trackBarB->Size = System::Drawing::Size(200, 90);
 			this->trackBarB->TabIndex = 12;
+			this->trackBarB->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarB_Scroll);
 			// 
 			// trackBarC
 			// 
@@ -216,6 +232,7 @@ namespace OOP42 {
 			this->trackBarC->Name = L"trackBarC";
 			this->trackBarC->Size = System::Drawing::Size(200, 90);
 			this->trackBarC->TabIndex = 13;
+			this->trackBarC->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarC_Scroll);
 			// 
 			// MyForm
 			// 
@@ -251,7 +268,7 @@ namespace OOP42 {
 
 		}
 #pragma endregion
-	private: System::Void textBoxA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	
 	private: System::Void UpdateFromModel(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void LoadSettings();
 	private: System::Void SaveSettings();
@@ -262,6 +279,24 @@ namespace OOP42 {
 		SaveSettings();
 	}
 	private: System::Boolean IsSettingSet();
+	private: System::Void textBoxA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: System::Void textBoxB_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: System::Void textBoxC_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: System::Void numericUpDownA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: System::Void numericUpDownB_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: System::Void numericUpDownC_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: System::Void trackBarA_Scroll(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void trackBarB_Scroll(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void trackBarC_Scroll(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void textBoxA_Leave(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void textBoxB_Leave(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void textBoxC_Leave(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void numericUpDownA_ValueChanged(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void numericUpDownB_ValueChanged(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void numericUpDownC_ValueChanged(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void numericUpDownA_Leave(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void numericUpDownB_Leave(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void numericUpDownC_Leave(System::Object^ sender, System::EventArgs^ e);
 };
 	
 	

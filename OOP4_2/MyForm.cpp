@@ -16,13 +16,7 @@ int main(array<String^>^ arg) {
 	return 0;
 }
 
-System::Void OOP42::MyForm::textBoxA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
-{
-	if (e->KeyCode == Keys::Enter) {
-		model->setA(Int32::Parse(textBoxA->Text));
-	}
-	return System::Void();
-}
+
 
 System::Void OOP42::MyForm::UpdateFromModel(System::Object^ sender, System::EventArgs^ e)
 {
@@ -46,37 +40,11 @@ System::Void OOP42::MyForm::LoadSettings() {
 	configFile = ConfigurationManager::OpenExeConfiguration(ConfigurationUserLevel::None);
 	auto appSettings = ConfigurationManager::AppSettings;
 	if (IsSettingSet()) {
-		model->setA(Int32::Parse(appSettings[L"A"]->ToString()));
-		model->setB(Int32::Parse(appSettings[L"B"]->ToString()));
-		model->setC(Int32::Parse(appSettings[L"C"]->ToString()));
+		model->hardsetA(Int32::Parse(appSettings[L"A"]->ToString()));
+		model->hardsetB(Int32::Parse(appSettings[L"B"]->ToString()));
+		model->hardsetC(Int32::Parse(appSettings[L"C"]->ToString()));
+		model->observers->Invoke(this, EventArgs::Empty);
 	}
-	
-	/*String^ configFilePath = "app.config";
-	System::Configuration::Configuration^ config = ConfigurationManager::OpenExeConfiguration(configFilePath);
-	if (config->HasFile) {
-		AppSettingsSection^ appSettings = config->AppSettings;
-		if (appSettings != nullptr) {
-			model->setA(Int32::Parse(appSettings->Settings["A"]->Value));
-			model->setB(Int32::Parse(appSettings->Settings["B"]->Value));
-			model->setC(Int32::Parse(appSettings->Settings["C"]->Value));
-
-		}
-	}
-	else {
-		MessageBox::Show("ERROR");
-	}*/
-	/*MyAppSettings^ appSettings = gcnew MyAppSettings();
-	textBoxA->Text = appSettings->A.ToString();
-	numericUpDownA->Value = appSettings->A;
-	trackBarA->Value = appSettings->A;
-
-	textBoxB->Text = appSettings->B.ToString();
-	numericUpDownB->Value = appSettings->B;
-	trackBarB->Value = appSettings->B;
-
-	textBoxC->Text = appSettings->C.ToString();
-	numericUpDownC->Value = appSettings->C;
-	trackBarC->Value = appSettings->C;*/
 	return System::Void();
 }
 
@@ -95,34 +63,6 @@ System::Void OOP42::MyForm::SaveSettings()
 	}
 	configFile->Save(ConfigurationSaveMode::Modified);
 	ConfigurationManager::RefreshSection(configFile->AppSettings->SectionInformation->Name);
-	/*String^ configFilePath = "app.config";
-	System::Configuration::Configuration^ config = ConfigurationManager::OpenExeConfiguration(configFilePath);
-	if (config->HasFile) {
-
-		AppSettingsSection^ appSettings = config->AppSettings;
-		if (appSettings != nullptr) {
-			appSettings->Settings["A"]->Value = model->getA().ToString();
-			appSettings->Settings["B"]->Value = model->getB().ToString();
-			appSettings->Settings["C"]->Value = model->getC().ToString();
-			config->Save(ConfigurationSaveMode::Modified);
-		}
-
-	}*/
-	/*
-	// Получаем путь к файлу конфигурации
-	String^ configFilePath = AppDomain::CurrentDomain->SetupInformation->ConfigurationFile;
-
-	// Создаем объект конфигурации
-	auto config = ConfigurationManager::OpenExeConfiguration(configFilePath);
-
-	// Получаем секцию настроек
-	ClientSettingsSection^ settings = safe_cast<ClientSettingsSection^>(config->GetSection("applicationSettings/MyNamespace.Properties.Settings"));
-
-	MyAppSettings^ appSettings = gcnew MyAppSettings();
-	appSettings->A = int::Parse(textBoxA->ToString());
-	appSettings->B = (int)numericUpDownB->Value;
-	appSettings->C = trackBarC->Value;
-	appSettings->Save();*/
 	return System::Void();
 }
 
@@ -130,5 +70,125 @@ System::Boolean OOP42::MyForm::IsSettingSet()
 {
 	auto appSettings = ConfigurationManager::AppSettings;
 	return appSettings[L"A"] != nullptr && appSettings[L"B"] != nullptr && appSettings[L"C"] != nullptr;
-	//return System::Boolean();
+}
+
+System::Void OOP42::MyForm::textBoxA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+{
+	if (e->KeyCode == Keys::Enter) {
+		model->setA(Int32::Parse(textBoxA->Text));
+	}
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::textBoxB_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+{
+	if (e->KeyCode == Keys::Enter) {
+		model->setB(Int32::Parse(textBoxB->Text));
+	}
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::textBoxC_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+{
+	if (e->KeyCode == Keys::Enter) {
+		model->setC(Int32::Parse(textBoxC->Text));
+	}
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+{
+	if (e->KeyCode == Keys::Enter) {
+		model->setA(Decimal::ToInt32(numericUpDownA->Value));
+	}
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownB_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+{
+	if (e->KeyCode == Keys::Enter) {
+		model->setB(Decimal::ToInt32(numericUpDownB->Value));
+	}
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownC_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+{
+	if (e->KeyCode == Keys::Enter) {
+		model->setC(Decimal::ToInt32(numericUpDownC->Value));
+	}
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::trackBarA_Scroll(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setA(trackBarA->Value);
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::trackBarB_Scroll(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setB(trackBarB->Value);
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::trackBarC_Scroll(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setC(trackBarC->Value);
+
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::textBoxA_Leave(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setA(Int32::Parse(textBoxA->Text));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::textBoxB_Leave(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setB(Int32::Parse(textBoxB->Text));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::textBoxC_Leave(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setC(Int32::Parse(textBoxC->Text));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownA_ValueChanged(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setA(Decimal::ToInt32(numericUpDownA->Value));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownB_ValueChanged(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setB(Decimal::ToInt32(numericUpDownB->Value));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownC_ValueChanged(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setC(Decimal::ToInt32(numericUpDownC->Value));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownA_Leave(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setA(Decimal::ToInt32(numericUpDownA->Value));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownB_Leave(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setB(Decimal::ToInt32(numericUpDownB->Value));
+	return System::Void();
+}
+
+System::Void OOP42::MyForm::numericUpDownC_Leave(System::Object^ sender, System::EventArgs^ e)
+{
+	model->setC(Decimal::ToInt32(numericUpDownC->Value));
+	return System::Void();
 }
