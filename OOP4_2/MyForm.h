@@ -1,4 +1,7 @@
 #pragma once
+#include "Model.h"
+#include "SaveSettings.h"
+#using <System.Configuration.dll>
 
 namespace OOP42 {
 
@@ -8,6 +11,7 @@ namespace OOP42 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Configuration;
 
 	/// <summary>
 	/// Сводка для MyForm
@@ -21,6 +25,9 @@ namespace OOP42 {
 			//
 			//TODO: добавьте код конструктора
 			//
+			model = gcnew MyModel();
+			model->observers += gcnew EventHandler(this, &MyForm::UpdateFromModel);
+			model->observers->Invoke(this, EventArgs::Empty);
 		}
 
 	protected:
@@ -36,19 +43,22 @@ namespace OOP42 {
 		}
 	private: System::Windows::Forms::Label^ label1;
 	protected:
+		MyModel^ model;
+		System::Configuration::Configuration^ configFile;
+
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ label5;
-	private: System::Windows::Forms::TextBox^ textBox1;
-	private: System::Windows::Forms::TextBox^ textBox2;
-	private: System::Windows::Forms::TextBox^ textBox3;
-	private: System::Windows::Forms::NumericUpDown^ numericUpDown1;
-	private: System::Windows::Forms::NumericUpDown^ numericUpDown2;
-	private: System::Windows::Forms::NumericUpDown^ numericUpDown3;
-	private: System::Windows::Forms::TrackBar^ trackBar1;
-	private: System::Windows::Forms::TrackBar^ trackBar2;
-	private: System::Windows::Forms::TrackBar^ trackBar3;
+	private: System::Windows::Forms::TextBox^ textBoxA;
+	private: System::Windows::Forms::TextBox^ textBoxB;
+	private: System::Windows::Forms::TextBox^ textBoxC;
+	private: System::Windows::Forms::NumericUpDown^ numericUpDownA;
+	private: System::Windows::Forms::NumericUpDown^ numericUpDownB;	
+	private: System::Windows::Forms::NumericUpDown^ numericUpDownC;
+	private: System::Windows::Forms::TrackBar^ trackBarA;
+	private: System::Windows::Forms::TrackBar^ trackBarB;
+	private: System::Windows::Forms::TrackBar^ trackBarC;
 
 	private:
 		/// <summary>
@@ -68,21 +78,21 @@ namespace OOP42 {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
-			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown2 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown3 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
-			this->trackBar2 = (gcnew System::Windows::Forms::TrackBar());
-			this->trackBar3 = (gcnew System::Windows::Forms::TrackBar());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown3))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar3))->BeginInit();
+			this->textBoxA = (gcnew System::Windows::Forms::TextBox());
+			this->textBoxB = (gcnew System::Windows::Forms::TextBox());
+			this->textBoxC = (gcnew System::Windows::Forms::TextBox());
+			this->numericUpDownA = (gcnew System::Windows::Forms::NumericUpDown());
+			this->numericUpDownB = (gcnew System::Windows::Forms::NumericUpDown());
+			this->numericUpDownC = (gcnew System::Windows::Forms::NumericUpDown());
+			this->trackBarA = (gcnew System::Windows::Forms::TrackBar());
+			this->trackBarB = (gcnew System::Windows::Forms::TrackBar());
+			this->trackBarC = (gcnew System::Windows::Forms::TrackBar());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDownA))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDownB))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDownC))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBarA))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBarB))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBarC))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -140,86 +150,87 @@ namespace OOP42 {
 			this->label5->TabIndex = 4;
 			this->label5->Text = L"C";
 			// 
-			// textBox1
+			// textBoxA
 			// 
-			this->textBox1->Location = System::Drawing::Point(268, 377);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(200, 31);
-			this->textBox1->TabIndex = 5;
+			this->textBoxA->Location = System::Drawing::Point(268, 377);
+			this->textBoxA->Name = L"textBoxA";
+			this->textBoxA->Size = System::Drawing::Size(200, 31);
+			this->textBoxA->TabIndex = 5;
+			this->textBoxA->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBoxA_KeyDown);
 			// 
-			// textBox2
+			// textBoxB
 			// 
-			this->textBox2->Location = System::Drawing::Point(632, 377);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(200, 31);
-			this->textBox2->TabIndex = 6;
+			this->textBoxB->Location = System::Drawing::Point(632, 377);
+			this->textBoxB->Name = L"textBoxB";
+			this->textBoxB->Size = System::Drawing::Size(200, 31);
+			this->textBoxB->TabIndex = 6;
 			// 
-			// textBox3
+			// textBoxC
 			// 
-			this->textBox3->Location = System::Drawing::Point(1008, 377);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(200, 31);
-			this->textBox3->TabIndex = 7;
+			this->textBoxC->Location = System::Drawing::Point(1008, 377);
+			this->textBoxC->Name = L"textBoxC";
+			this->textBoxC->Size = System::Drawing::Size(200, 31);
+			this->textBoxC->TabIndex = 7;
 			// 
-			// numericUpDown1
+			// numericUpDownA
 			// 
-			this->numericUpDown1->Location = System::Drawing::Point(268, 457);
-			this->numericUpDown1->Name = L"numericUpDown1";
-			this->numericUpDown1->Size = System::Drawing::Size(200, 31);
-			this->numericUpDown1->TabIndex = 8;
+			this->numericUpDownA->Location = System::Drawing::Point(268, 457);
+			this->numericUpDownA->Name = L"numericUpDownA";
+			this->numericUpDownA->Size = System::Drawing::Size(200, 31);
+			this->numericUpDownA->TabIndex = 8;
 			// 
-			// numericUpDown2
+			// numericUpDownB
 			// 
-			this->numericUpDown2->Location = System::Drawing::Point(632, 457);
-			this->numericUpDown2->Name = L"numericUpDown2";
-			this->numericUpDown2->Size = System::Drawing::Size(200, 31);
-			this->numericUpDown2->TabIndex = 9;
+			this->numericUpDownB->Location = System::Drawing::Point(632, 457);
+			this->numericUpDownB->Name = L"numericUpDownB";
+			this->numericUpDownB->Size = System::Drawing::Size(200, 31);
+			this->numericUpDownB->TabIndex = 9;
 			// 
-			// numericUpDown3
+			// numericUpDownC
 			// 
-			this->numericUpDown3->Location = System::Drawing::Point(1008, 457);
-			this->numericUpDown3->Name = L"numericUpDown3";
-			this->numericUpDown3->Size = System::Drawing::Size(200, 31);
-			this->numericUpDown3->TabIndex = 10;
+			this->numericUpDownC->Location = System::Drawing::Point(1008, 457);
+			this->numericUpDownC->Name = L"numericUpDownC";
+			this->numericUpDownC->Size = System::Drawing::Size(200, 31);
+			this->numericUpDownC->TabIndex = 10;
 			// 
-			// trackBar1
+			// trackBarA
 			// 
-			this->trackBar1->Location = System::Drawing::Point(268, 516);
-			this->trackBar1->Maximum = 100;
-			this->trackBar1->Name = L"trackBar1";
-			this->trackBar1->Size = System::Drawing::Size(200, 90);
-			this->trackBar1->TabIndex = 11;
+			this->trackBarA->Location = System::Drawing::Point(268, 516);
+			this->trackBarA->Maximum = 100;
+			this->trackBarA->Name = L"trackBarA";
+			this->trackBarA->Size = System::Drawing::Size(200, 90);
+			this->trackBarA->TabIndex = 11;
 			// 
-			// trackBar2
+			// trackBarB
 			// 
-			this->trackBar2->Location = System::Drawing::Point(632, 516);
-			this->trackBar2->Maximum = 100;
-			this->trackBar2->Name = L"trackBar2";
-			this->trackBar2->Size = System::Drawing::Size(200, 90);
-			this->trackBar2->TabIndex = 12;
+			this->trackBarB->Location = System::Drawing::Point(632, 516);
+			this->trackBarB->Maximum = 100;
+			this->trackBarB->Name = L"trackBarB";
+			this->trackBarB->Size = System::Drawing::Size(200, 90);
+			this->trackBarB->TabIndex = 12;
 			// 
-			// trackBar3
+			// trackBarC
 			// 
-			this->trackBar3->Location = System::Drawing::Point(1008, 516);
-			this->trackBar3->Maximum = 100;
-			this->trackBar3->Name = L"trackBar3";
-			this->trackBar3->Size = System::Drawing::Size(200, 90);
-			this->trackBar3->TabIndex = 13;
+			this->trackBarC->Location = System::Drawing::Point(1008, 516);
+			this->trackBarC->Maximum = 100;
+			this->trackBarC->Name = L"trackBarC";
+			this->trackBarC->Size = System::Drawing::Size(200, 90);
+			this->trackBarC->TabIndex = 13;
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(12, 25);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1509, 636);
-			this->Controls->Add(this->trackBar3);
-			this->Controls->Add(this->trackBar2);
-			this->Controls->Add(this->trackBar1);
-			this->Controls->Add(this->numericUpDown3);
-			this->Controls->Add(this->numericUpDown2);
-			this->Controls->Add(this->numericUpDown1);
-			this->Controls->Add(this->textBox3);
-			this->Controls->Add(this->textBox2);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->trackBarC);
+			this->Controls->Add(this->trackBarB);
+			this->Controls->Add(this->trackBarA);
+			this->Controls->Add(this->numericUpDownC);
+			this->Controls->Add(this->numericUpDownB);
+			this->Controls->Add(this->numericUpDownA);
+			this->Controls->Add(this->textBoxC);
+			this->Controls->Add(this->textBoxB);
+			this->Controls->Add(this->textBoxA);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->label3);
@@ -227,23 +238,32 @@ namespace OOP42 {
 			this->Controls->Add(this->label1);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown3))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar3))->EndInit();
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MyForm::MyForm_FormClosing);
+			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDownA))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDownB))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDownC))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBarA))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBarB))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBarC))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-
-	};
-	ref class Model {
-	private:
-		int value;
-	public:
-
-	};
+	private: System::Void textBoxA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: System::Void UpdateFromModel(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void LoadSettings();
+	private: System::Void SaveSettings();
+	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		LoadSettings();
+	}
+	private: System::Void MyForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+		SaveSettings();
+	}
+	private: System::Boolean IsSettingSet();
+};
+	
+	
+	
 }
