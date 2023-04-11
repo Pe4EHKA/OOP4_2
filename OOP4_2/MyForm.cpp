@@ -25,13 +25,14 @@ System::Void OOP42::MyForm::UpdateFromModel(System::Object^ sender, System::Even
 	textBoxC->Text = model->getC().ToString();
 
 	numericUpDownA->Value = Convert::ToDecimal(model->getA());
-	numericUpDownB->Value = Convert::ToDecimal(model->getB());
 	numericUpDownC->Value = Convert::ToDecimal(model->getC());
+	numericUpDownB->Value = Convert::ToDecimal(model->getB());
+	numericUpDownB->Maximum = model->getC();
+	numericUpDownB->Minimum = model->getA();
 
 	trackBarA->Value = model->getA();
 	trackBarB->Value = model->getB();
 	trackBarC->Value = model->getC();
-
 	return System::Void();
 }
 
@@ -40,11 +41,14 @@ System::Void OOP42::MyForm::LoadSettings() {
 	configFile = ConfigurationManager::OpenExeConfiguration(ConfigurationUserLevel::None);
 	auto appSettings = ConfigurationManager::AppSettings;
 	if (IsSettingSet()) {
-		model->hardsetA(Int32::Parse(appSettings[L"A"]->ToString()));
-		model->hardsetB(Int32::Parse(appSettings[L"B"]->ToString()));
-		model->hardsetC(Int32::Parse(appSettings[L"C"]->ToString()));
-		model->observers->Invoke(this, EventArgs::Empty);
+		model = gcnew MyModel(Int32::Parse(appSettings[L"A"]->ToString()), Int32::Parse(appSettings[L"B"]->ToString()), Int32::Parse(appSettings[L"C"]->ToString()));
+		model->observers += gcnew EventHandler(this, &MyForm::UpdateFromModel);
 	}
+	else {
+		model = gcnew MyModel();
+		model->observers += gcnew EventHandler(this, &MyForm::UpdateFromModel);
+	}
+	model->observers->Invoke(this, EventArgs::Empty);
 	return System::Void();
 }
 
@@ -72,123 +76,115 @@ System::Boolean OOP42::MyForm::IsSettingSet()
 	return appSettings[L"A"] != nullptr && appSettings[L"B"] != nullptr && appSettings[L"C"] != nullptr;
 }
 
-System::Void OOP42::MyForm::textBoxA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+System::Void OOP42::MyForm::textBox_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
 {
 	if (e->KeyCode == Keys::Enter) {
-		model->setA(Int32::Parse(textBoxA->Text));
+		int value;
+		TextBox^ box = dynamic_cast<TextBox^>(sender);
+		Boolean number = Int32::TryParse(box->Text, value);
+		if (number) {
+			if (box->Name == textBoxA->Name) {
+				model->setA(value);
+			}
+			else if (box->Name == textBoxB->Name) {
+				model->setB(value);
+			}
+			else if (box->Name == textBoxC->Name) {
+				model->setC(value);
+			}
+		}
+	}
+	else if (e->KeyCode == Keys::Escape) {
+		model->observers->Invoke(this, EventArgs::Empty);
 	}
 	return System::Void();
 }
 
-System::Void OOP42::MyForm::textBoxB_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+System::Void OOP42::MyForm::textBox_LeaveFocus(System::Object^ sender, System::EventArgs^ e)
 {
-	if (e->KeyCode == Keys::Enter) {
-		model->setB(Int32::Parse(textBoxB->Text));
+	int value;
+	TextBox^ box = dynamic_cast<TextBox^>(sender);
+	Boolean number = Int32::TryParse(box->Text, value);
+	if (number) {
+		if (box->Name == textBoxA->Name) {
+			model->setA(value);
+		}
+		else if (box->Name == textBoxB->Name) {
+			model->setB(value);
+		}
+		else if (box->Name == textBoxC->Name) {
+			model->setC(value);
+		}
 	}
 	return System::Void();
 }
 
-System::Void OOP42::MyForm::textBoxC_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+System::Void OOP42::MyForm::numericUpDown_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
 {
 	if (e->KeyCode == Keys::Enter) {
-		model->setC(Int32::Parse(textBoxC->Text));
+		NumericUpDown^ box = dynamic_cast<NumericUpDown^>(sender);
+		int value = Decimal::ToInt32(box->Value);
+		if (box->Name == numericUpDownA->Name) {
+			model->setA(value);
+		}
+		else if (box->Name == numericUpDownB->Name) {
+			model->setB(value);
+		}
+		else if (box->Name == numericUpDownC->Name) {
+			model->setC(value);
+		}
+	}
+	else if (e->KeyCode == Keys::Escape) {
+		model->observers->Invoke(this, EventArgs::Empty);
 	}
 	return System::Void();
 }
 
-System::Void OOP42::MyForm::numericUpDownA_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+System::Void OOP42::MyForm::numericUpDown_ChangedValue(System::Object^ sender, System::EventArgs^ e)
 {
-	if (e->KeyCode == Keys::Enter) {
-		model->setA(Decimal::ToInt32(numericUpDownA->Value));
+	NumericUpDown^ box = dynamic_cast<NumericUpDown^>(sender);
+	int value = Decimal::ToInt32(box->Value);
+	if (box->Name == numericUpDownA->Name) {
+		model->setA(value);
+	}
+	else if (box->Name == numericUpDownB->Name) {
+		model->setB(value);
+	}
+	else if (box->Name == numericUpDownC->Name) {
+		model->setC(value);
 	}
 	return System::Void();
 }
 
-System::Void OOP42::MyForm::numericUpDownB_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+System::Void OOP42::MyForm::numericUpDown_LeaveFocus(System::Object^ sender, System::EventArgs^ e)
 {
-	if (e->KeyCode == Keys::Enter) {
-		model->setB(Decimal::ToInt32(numericUpDownB->Value));
+	NumericUpDown^ box = dynamic_cast<NumericUpDown^>(sender);
+	int value = Decimal::ToInt32(box->Value);
+	if (box->Name == numericUpDownA->Name) {
+		model->setA(value);
+	}
+	else if (box->Name == numericUpDownB->Name) {
+		model->setB(value);
+	}
+	else if (box->Name == numericUpDownC->Name) {
+		model->setC(value);
 	}
 	return System::Void();
 }
 
-System::Void OOP42::MyForm::numericUpDownC_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+System::Void OOP42::MyForm::trackBar_Scrolling(System::Object^ sender, System::EventArgs^ e)
 {
-	if (e->KeyCode == Keys::Enter) {
-		model->setC(Decimal::ToInt32(numericUpDownC->Value));
+	TrackBar^ box = dynamic_cast<TrackBar^>(sender);
+	int value = box->Value;
+	if (box->Name == trackBarA->Name) {
+		model->setA(value);
+	}
+	else if (box->Name == trackBarB->Name) {
+		model->setB(value);
+	}
+	else if (box->Name == trackBarC->Name) {
+		model->setC(value);
 	}
 	return System::Void();
 }
 
-System::Void OOP42::MyForm::trackBarA_Scroll(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setA(trackBarA->Value);
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::trackBarB_Scroll(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setB(trackBarB->Value);
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::trackBarC_Scroll(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setC(trackBarC->Value);
-
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::textBoxA_Leave(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setA(Int32::Parse(textBoxA->Text));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::textBoxB_Leave(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setB(Int32::Parse(textBoxB->Text));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::textBoxC_Leave(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setC(Int32::Parse(textBoxC->Text));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::numericUpDownA_ValueChanged(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setA(Decimal::ToInt32(numericUpDownA->Value));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::numericUpDownB_ValueChanged(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setB(Decimal::ToInt32(numericUpDownB->Value));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::numericUpDownC_ValueChanged(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setC(Decimal::ToInt32(numericUpDownC->Value));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::numericUpDownA_Leave(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setA(Decimal::ToInt32(numericUpDownA->Value));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::numericUpDownB_Leave(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setB(Decimal::ToInt32(numericUpDownB->Value));
-	return System::Void();
-}
-
-System::Void OOP42::MyForm::numericUpDownC_Leave(System::Object^ sender, System::EventArgs^ e)
-{
-	model->setC(Decimal::ToInt32(numericUpDownC->Value));
-	return System::Void();
-}

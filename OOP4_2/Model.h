@@ -13,10 +13,11 @@ private:
 	int B;
 	int C;
 public:
-
 	System::EventHandler^ observers;
 
 	MyModel() : A(0), B(0), C(0) {}
+
+	MyModel(int newA, int newB, int newC) : A(newA), B(newB), C(newC) {}
 
 	int getA() {
 		return A;
@@ -30,72 +31,65 @@ public:
 		return C;
 	}
 
-	void hardsetA(int newA) {
-		A = newA;
-	}
-
-	void hardsetB(int newB) {
-		B = newB;
-	}
-
-	void hardsetC(int newC) {
-		C = newC;
-	}
-
 	void setA(int newA) {  // Разрешающее поведение
-		observers->Invoke(this, EventArgs::Empty);
-		if (newA > 100) {
+		if (A == newA) {
 			return;
+		}
+		if (newA > 100) {
+			newA = 100;
 		}
 		if (newA < 0) {
-			return;
-		}
-		if (newA > B) {
-			setB(newA);
+			newA = 0;
 		}
 		if (newA > C) {
-			setC(newA);
+			B = newA;
+			C = newA;
+		}
+		else if (newA > B) {
+			B = A;
 		}
 		A = newA;
 		observers->Invoke(this, EventArgs::Empty);
+		return;
 	}
 
 	void setB(int newB) {  // Запрещающее поведение
-		observers->Invoke(this, EventArgs::Empty);
-		if (newB > 100) {
+		if (B == newB) {
 			return;
+		}
+		if (newB > 100) {
+			newB = 100;
 		}
 		if (newB < 0) {
-			return;
+			newB = 0;
 		}
-		if (newB < A) {
-			// Если новое значение меньше A, откатываем изменение
-			return;
+		if (newB >= A && newB <= C) {
+			B = newB;
 		}
-		if (newB > C) {
-			// Если новое значение больше C, откатываем изменение
-			return;
-		}
-		B = newB;
 		observers->Invoke(this, EventArgs::Empty);
+		return;
 	}
 
 	void setC(int newC) {  // Разрешающее поведение
-		observers->Invoke(this, EventArgs::Empty);
-		if (newC > 100) {
+		if (C == newC) {
 			return;
+		}
+		if (newC > 100) {
+			newC = 100;
 		}
 		if (newC < 0) {
-			return;
+			newC = 0;
 		}
 		if (B > newC) {
-			setB(newC);
+			B = newC;
 		}
 		if (A > newC) {
-			setA(newC);
+			A = newC;
+			B = newC;
 		}
 		C = newC;
 		observers->Invoke(this, EventArgs::Empty);
+		return;
 	}
 	~MyModel() {}
 };
